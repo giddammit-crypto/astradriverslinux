@@ -1,0 +1,18 @@
+# Временные файлы и кэш
+__pycache__/
+*.py[cod]
+*$py.class
+*.tmp
+*.bak
+*.swp
+*~
+
+# Большие монолитные архивы (выносятся в GitHub Releases)
+linux.zip
+*.zip
+*.tar.gz
+
+# Системные файлы
+.DS_Store
+Thumbs.db
+data/updater_state.json
