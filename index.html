@@ -9,46 +9,25 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23059669'/%3E%3Cpath d='M8 9h16M8 16h16M8 23h10' stroke='%23ffffff' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E" type="image/svg+xml">
   <style>
     :root {
-      --bg: #f8fafc;
-      --surface: #ffffff;
-      --subtle: #f1f5f9;
-      --border: #e2e8f0;
-      --border-strong: #cbd5e1;
-      --txt: #0f172a;
-      --txt-muted: #475569;
-      --txt-soft: #64748b;
-      --brand: #059669;
-      --brand-hover: #047857;
-      --brand-light: #ecfdf5;
-      --brand-border: #a7f3d0;
-      --brand-dark: #065f46;
-      --term-bg: #0f172a;
-      --term-bar: #1e293b;
-      --term-txt: #f8fafc;
-      --term-prompt: #10b981;
-      --radius-sm: 6px;
-      --radius-md: 10px;
-      --radius-lg: 14px;
-      --radius-full: 9999px;
-      --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.05);
-      --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.08);
-      --shadow-lg: 0 12px 24px -4px rgba(15, 23, 42, 0.12);
+      --bg: #f8fafc; --surface: #ffffff; --subtle: #f1f5f9; --border: #e2e8f0;
+      --border-strong: #cbd5e1; --txt: #0f172a; --txt-muted: #475569;
+      --txt-soft: #64748b; --brand: #059669; --brand-hover: #047857;
+      --brand-light: #ecfdf5; --brand-border: #a7f3d0; --brand-dark: #065f46;
+      --term-bg: #0f172a; --term-bar: #1e293b; --term-txt: #f8fafc;
+      --term-prompt: #10b981; --radius-sm: 6px; --radius-md: 10px;
+      --radius-lg: 14px; --radius-full: 9999px;
+      --shadow-sm: 0 1px 3px rgba(15,23,42,.05);
+      --shadow-md: 0 4px 12px -2px rgba(15,23,42,.08);
+      --shadow-lg: 0 12px 24px -4px rgba(15,23,42,.12);
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-    body {
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "PT Sans", sans-serif;
-      background: var(--bg);
-      color: var(--txt);
-      line-height: 1.55;
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
-    }
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg); color: var(--txt); line-height: 1.55;
+      -webkit-font-smoothing: antialiased; overflow-x: hidden; }
     .wrap { width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 20px; }
-    a { color: var(--brand); text-decoration: none; transition: color 0.15s; }
+    a { color: var(--brand); text-decoration: none; transition: color .15s; }
     a:hover { color: var(--brand-hover); text-decoration: underline; }
-
-    /* Хедер */
     .site-header { background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
     .header-inner { display: flex; align-items: center; justify-content: space-between; height: 60px; gap: 16px; }
     .brand { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 16px; color: var(--txt); text-decoration: none; }
@@ -58,52 +37,40 @@
     .nav-list { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 20px; list-style: none; font-size: 14px; font-weight: 500; }
     .nav-list a { color: var(--txt-muted); }
     .nav-list a:hover { color: var(--txt); text-decoration: none; }
-
-    /* Hero */
     .hero { padding: 44px 0 40px; background: var(--surface); border-bottom: 1px solid var(--border); }
-    .hero-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) 280px; gap: 40px; align-items: center; }
+    .hero-grid { display: grid; grid-template-columns: minmax(0,1.35fr) 280px; gap: 40px; align-items: center; }
     .hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px; background: var(--brand-light); border: 1px solid var(--brand-border); color: var(--brand-dark); font-size: 13px; font-weight: 600; border-radius: var(--radius-full); margin-bottom: 16px; }
-    .status-dot { width: 8px; height: 8px; background: var(--brand); border-radius: 50%; box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.2); }
-    .hero h1 { font-size: clamp(26px, 3.5vw, 36px); line-height: 1.25; font-weight: 800; color: var(--txt); letter-spacing: -0.02em; margin-bottom: 12px; }
+    .status-dot { width: 8px; height: 8px; background: var(--brand); border-radius: 50%; box-shadow: 0 0 0 2px rgba(5,150,105,.2); }
+    .hero h1 { font-size: clamp(26px,3.5vw,36px); line-height: 1.25; font-weight: 800; color: var(--txt); letter-spacing: -.02em; margin-bottom: 12px; }
     .hero-lead { font-size: 15.5px; color: var(--txt-muted); line-height: 1.6; margin-bottom: 22px; }
-
-    /* Терминал */
     .terminal { background: var(--term-bg); border: 1px solid var(--term-bar); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-md); margin-bottom: 18px; }
-    .terminal-bar { display: flex; align-items: center; justify-content: space-between; padding: 7px 14px; background: var(--term-bar); border-bottom: 1px solid rgba(255, 255, 255, 0.06); font-size: 12px; color: #94a3b8; font-family: ui-monospace, Consolas, monospace; }
+    .terminal-bar { display: flex; align-items: center; justify-content: space-between; padding: 7px 14px; background: var(--term-bar); border-bottom: 1px solid rgba(255,255,255,.06); font-size: 12px; color: #94a3b8; font-family: ui-monospace,Consolas,monospace; }
     .dots { display: flex; gap: 6px; }
     .dot { width: 9px; height: 9px; border-radius: 50%; background: #475569; }
     .terminal-body { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; gap: 12px; }
     .terminal-row { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; overflow-x: auto; scrollbar-width: thin; }
-    .prompt { color: var(--term-prompt); font-family: ui-monospace, Consolas, monospace; font-weight: 700; user-select: none; }
-    .code { font-family: ui-monospace, "SF Mono", Consolas, monospace; font-size: 13.5px; color: var(--term-txt); white-space: nowrap; user-select: all; }
-    .btn-copy { display: inline-flex; align-items: center; gap: 6px; background: #1e293b; color: #f1f5f9; border: 1px solid #334155; padding: 7px 13px; border-radius: var(--radius-sm); font-size: 12.5px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: all 0.15s ease; flex-shrink: 0; }
-    .btn-copy:hover { background: #334155; color: #ffffff; }
-    .btn-copy.copied { background: var(--brand); border-color: var(--brand); color: #ffffff; }
-
-    /* Теги ОС */
+    .prompt { color: var(--term-prompt); font-family: ui-monospace,Consolas,monospace; font-weight: 700; user-select: none; }
+    .code { font-family: ui-monospace,"SF Mono",Consolas,monospace; font-size: 13.5px; color: var(--term-txt); white-space: nowrap; user-select: all; }
+    .btn-copy { display: inline-flex; align-items: center; gap: 6px; background: #1e293b; color: #f1f5f9; border: 1px solid #334155; padding: 7px 13px; border-radius: var(--radius-sm); font-size: 12.5px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: all .15s ease; flex-shrink: 0; }
+    .btn-copy:hover { background: #334155; color: #fff; }
+    .btn-copy.copied { background: var(--brand); border-color: var(--brand); color: #fff; }
     .os-tags { display: flex; flex-wrap: wrap; gap: 8px; font-size: 12.5px; }
     .os-tag { background: var(--subtle); border: 1px solid var(--border); color: var(--txt-muted); padding: 3px 9px; border-radius: var(--radius-sm); font-weight: 500; display: inline-flex; align-items: center; gap: 5px; }
-
-    /* Маскот Космо */
     .mascot-col { display: flex; flex-direction: column; align-items: center; text-align: center; }
-    .mascot-frame { width: 250px; height: 250px; border-radius: 50%; border: 4px solid var(--surface); box-shadow: var(--shadow-lg), 0 0 0 1px var(--border); overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center; }
+    .mascot-frame { width: 250px; height: 250px; border-radius: 50%; border: 4px solid var(--surface); box-shadow: var(--shadow-lg),0 0 0 1px var(--border); overflow: hidden; background: #fff; display: flex; align-items: center; justify-content: center; }
     .mascot-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .mascot-caption { margin-top: 12px; font-size: 13px; font-weight: 500; color: var(--txt-muted); }
     .mascot-caption strong { color: var(--txt); }
-
-    /* Секции */
     .section { padding: 44px 0; }
     .section-head { margin-bottom: 26px; }
-    .section-title { font-size: 23px; font-weight: 700; color: var(--txt); letter-spacing: -0.01em; margin-bottom: 6px; }
+    .section-title { font-size: 23px; font-weight: 700; color: var(--txt); letter-spacing: -.01em; margin-bottom: 6px; }
     .section-desc { font-size: 15px; color: var(--txt-soft); }
-
-    /* Карточки компонентов */
-    .cards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
-    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; transition: box-shadow 0.15s ease, border-color 0.15s ease; }
+    .cards-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 24px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; transition: box-shadow .15s ease,border-color .15s ease; }
     .card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-md); }
-    .card-photo-box { height: 160px; background: #ffffff; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: center; padding: 16px; position: relative; }
+    .card-photo-box { height: 160px; background: #fff; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: center; padding: 16px; position: relative; }
     .card-photo-box img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
-    .card-badge { position: absolute; top: 10px; right: 10px; background: rgba(15, 23, 42, 0.75); color: #ffffff; font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: var(--radius-sm); backdrop-filter: blur(4px); }
+    .card-badge { position: absolute; top: 10px; right: 10px; background: rgba(15,23,42,.75); color: #fff; font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: var(--radius-sm); backdrop-filter: blur(4px); }
     .neb-emblem { width: 68px; height: 68px; border-radius: var(--radius-md); background: var(--brand-light); border: 1px solid var(--brand-border); color: var(--brand); display: flex; align-items: center; justify-content: center; }
     .card-content { padding: 18px; display: flex; flex-direction: column; flex: 1; }
     .card-title { font-size: 17px; font-weight: 700; color: var(--txt); margin-bottom: 6px; }
@@ -112,39 +79,29 @@
     .card-features li { display: flex; align-items: flex-start; gap: 8px; }
     .card-features svg { color: var(--brand); flex-shrink: 0; margin-top: 3px; }
     .card-cmd { margin-top: auto; }
-
-    /* Шаги */
-    .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .steps-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
     .step-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 22px; box-shadow: var(--shadow-sm); }
     .step-num { width: 32px; height: 32px; border-radius: var(--radius-sm); background: var(--subtle); border: 1px solid var(--border); color: var(--txt); font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
     .step-title { font-size: 16px; font-weight: 700; margin-bottom: 6px; color: var(--txt); }
     .step-desc { font-size: 13.5px; color: var(--txt-muted); line-height: 1.55; }
-    kbd { display: inline-block; padding: 2px 6px; font-family: ui-monospace, Consolas, monospace; font-size: 11.5px; font-weight: 600; color: var(--txt); background-color: var(--subtle); border: 1px solid var(--border-strong); border-radius: 4px; box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1); }
-
-    /* FAQ */
+    kbd { display: inline-block; padding: 2px 6px; font-family: ui-monospace,Consolas,monospace; font-size: 11.5px; font-weight: 600; color: var(--txt); background-color: var(--subtle); border: 1px solid var(--border-strong); border-radius: 4px; box-shadow: 0 1px 0 rgba(0,0,0,.1); }
     .faq-list { display: flex; flex-direction: column; gap: 12px; max-width: 860px; }
-    .faq-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; transition: border-color 0.15s ease; }
+    .faq-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; transition: border-color .15s ease; }
     .faq-item[open] { border-color: var(--border-strong); }
     .faq-question { padding: 15px 18px; font-size: 15px; font-weight: 600; color: var(--txt); cursor: pointer; display: flex; align-items: center; justify-content: space-between; list-style: none; user-select: none; }
     .faq-question::-webkit-details-marker { display: none; }
-    .faq-chevron { width: 18px; height: 18px; color: var(--txt-soft); transition: transform 0.2s ease; flex-shrink: 0; margin-left: 12px; }
+    .faq-chevron { width: 18px; height: 18px; color: var(--txt-soft); transition: transform .2s ease; flex-shrink: 0; margin-left: 12px; }
     .faq-item[open] .faq-chevron { transform: rotate(180deg); }
     .faq-answer { padding: 0 18px 16px; font-size: 14px; color: var(--txt-muted); line-height: 1.6; }
-    .faq-answer code { background: var(--subtle); border: 1px solid var(--border); padding: 2px 6px; border-radius: 4px; font-family: ui-monospace, Consolas, monospace; font-size: 13px; color: var(--txt); }
-
-    /* Подвал */
+    .faq-answer code { background: var(--subtle); border: 1px solid var(--border); padding: 2px 6px; border-radius: 4px; font-family: ui-monospace,Consolas,monospace; font-size: 13px; color: var(--txt); }
     .site-footer { background: var(--surface); border-top: 1px solid var(--border); padding: 30px 0; margin-top: 40px; font-size: 13.5px; color: var(--txt-soft); }
     .footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
     .footer-links { display: flex; flex-wrap: wrap; gap: 14px 18px; }
     .footer-links a { color: var(--txt-soft); }
     .footer-links a:hover { color: var(--txt); }
-
-    /* Тост */
-    .toast { position: fixed; bottom: 24px; right: 24px; background: #0f172a; color: #ffffff; padding: 10px 16px; border-radius: var(--radius-md); font-size: 13px; font-weight: 500; box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 8px; z-index: 100; opacity: 0; transform: translateY(12px); pointer-events: none; transition: opacity 0.2s ease, transform 0.2s ease; }
+    .toast { position: fixed; bottom: 24px; right: 24px; background: #0f172a; color: #fff; padding: 10px 16px; border-radius: var(--radius-md); font-size: 13px; font-weight: 500; box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 8px; z-index: 100; opacity: 0; transform: translateY(12px); pointer-events: none; transition: opacity .2s ease,transform .2s ease; }
     .toast.active { opacity: 1; transform: translateY(0); }
     .toast-icon { color: #34d399; }
-
-    /* Адаптивность */
     @media (max-width: 860px) {
       .hero-grid { grid-template-columns: 1fr; text-align: center; gap: 28px; }
       .mascot-col { order: -1; }
@@ -165,8 +122,6 @@
   </style>
 </head>
 <body id="top">
-
-  <!-- Хедер -->
   <header class="site-header">
     <div class="wrap header-inner">
       <a href="#top" class="brand">
@@ -174,7 +129,7 @@
         <span>biblioteka33.ru</span>
         <span style="color:var(--txt-soft);font-weight:400">/</span>
         <span>linux</span>
-        <span class="brand-tag">v2.0</span>
+        <span class="brand-tag">v2.2</span>
       </a>
       <nav aria-label="Навигация">
         <ul class="nav-list">
@@ -183,301 +138,146 @@
           <li><a href="#faq">Вопросы и ответы</a></li>
           <li><a href="scripts/SHA256SUMS" target="_blank" rel="noopener">SHA256</a></li>
           <li><a href="https://github.com/giddammit-crypto/astradriverslinux" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:5px"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>GitHub</a></li>
-          <li><span id="updater-badge" class="brand-tag" style="cursor:pointer;display:inline-flex;align-items:center;gap:6px" title="Нажмите для проверки обновлений с GitHub"><span class="status-dot"></span> v2.1.0</span></li>
+          <li><span id="updater-badge" class="brand-tag" style="cursor:pointer;display:inline-flex;align-items:center;gap:6px" title="Проверка обновлений"><span class="status-dot"></span> v2.2.0</span></li>
         </ul>
       </nav>
     </div>
   </header>
 
-  <!-- Hero-секция -->
   <section class="hero">
     <div class="wrap">
-      <!-- Баннер обновления с GitHub -->
       <div id="update-notification-banner" style="display:none;background:#ecfdf5;border:1px solid #10b981;border-radius:10px;padding:12px 18px;margin-bottom:20px;">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
-          <div id="update-banner-msg" style="font-size:14px;color:#065f46">
-            <strong>Доступно свежее обновление проекта на GitHub!</strong>
-          </div>
+          <div id="update-banner-msg" style="font-size:14px;color:#065f46"><strong>Доступно обновление на GitHub!</strong></div>
           <div style="display:flex;gap:8px">
-            <button id="btn-apply-update" class="btn-copy" style="background:#059669;border-color:#047857;color:#fff">Обновить сайт и скрипты</button>
             <a href="https://github.com/giddammit-crypto/astradriverslinux/commits/main" target="_blank" rel="noopener" class="btn-copy" style="background:#1e293b;color:#fff">История изменений</a>
           </div>
         </div>
       </div>
-
       <div class="hero-grid">
-      <div class="hero-text">
-        <div class="hero-badge">
-          <span class="status-dot"></span>
-          Библиотечный онлайн-инсталлятор
-        </div>
-        <h1>Драйверы оборудования и система НЭБ РФ</h1>
-        <p class="hero-lead">
-          Автоматическая настройка рабочего места на Astra Linux, Ubuntu и Debian.
-          Принтеры сразу готовы к печати — без ручного добавления в CUPS и поиска драйверов.
-        </p>
-
-        <!-- Главная команда setup.sh -->
-        <div class="terminal">
-          <div class="terminal-bar">
-            <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
-            <span>setup.sh — мастер установки «Космо»</span>
-          </div>
-          <div class="terminal-body">
-            <div class="terminal-row">
-              <span class="prompt">$</span>
-              <code class="code" id="cmd-master">curl -fsSL https://biblioteka33.ru/linux/scripts/setup.sh | bash</code>
+        <div class="hero-text">
+          <div class="hero-badge"><span class="status-dot"></span>Библиотечный онлайн-инсталлятор</div>
+          <h1>Драйверы оборудования и система НЭБ РФ</h1>
+          <p class="hero-lead">Автоматическая настройка рабочего места на Astra Linux, Ubuntu и Debian. Принтеры сразу готовы к печати — без ручного добавления в CUPS и поиска драйверов.</p>
+          <div class="terminal">
+            <div class="terminal-bar">
+              <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+              <span>setup.sh — мастер установки «Космо»</span>
             </div>
-            <button class="btn-copy" data-target="cmd-master" type="button" aria-label="Скопировать команду мастера"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg><span>Копировать</span></button>
+            <div class="terminal-body">
+              <div class="terminal-row"><span class="prompt">$</span><code class="code" id="cmd-master">curl -fsSL https://biblioteka33.ru/linux/scripts/setup.sh | bash</code></div>
+              <button class="btn-copy" data-target="cmd-master" type="button" aria-label="Скопировать"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg><span>Копировать</span></button>
+            </div>
+          </div>
+          <div class="os-tags">
+            <span class="os-tag">✓ Astra Linux 1.6 / 1.7 / 1.8 (Fly DE)</span>
+            <span class="os-tag">✓ Ubuntu 20.04–24.04</span>
+            <span class="os-tag">✓ Debian 10–13</span>
           </div>
         </div>
-
-        <div class="os-tags">
-          <span class="os-tag">✓ Astra Linux 1.6 / 1.7 / 1.8 (Fly DE)</span>
-          <span class="os-tag">✓ Ubuntu 20.04–24.04</span>
-          <span class="os-tag">✓ Debian 10–13</span>
+        <div class="mascot-col">
+          <div class="mascot-frame"><img src="assets/hero-cosmo.png" alt="Маскот Космо" width="250" height="250"></div>
+          <div class="mascot-caption"><strong>Космо</strong> · мастер быстрой настройки</div>
         </div>
       </div>
-
-      <!-- Маскот Космо -->
-      <div class="mascot-col">
-        <div class="mascot-frame">
-          <img src="assets/hero-cosmo.png" alt="Маскот Космо" width="250" height="250">
-        </div>
-        <div class="mascot-caption">
-          <strong>Космо</strong> · мастер быстрой настройки
-        </div>
-      </div>
-    </div>
     </div>
   </section>
 
-  <!-- Основной контент -->
   <main class="wrap">
-
-    <!-- Секция компонентов -->
     <section class="section" id="components">
       <div class="section-head">
         <h2 class="section-title">Компоненты и драйверы</h2>
         <p class="section-desc">Установите всё сразу через общий мастер выше или выберите нужное оборудование:</p>
       </div>
-
       <div class="cards-grid">
-        <!-- Карточка 1: Canon LBP2900 -->
         <article class="card">
-          <div class="card-photo-box">
-            <span class="card-badge">Лазерный · CAPT 2.71</span>
-            <img src="assets/canon-lbp2900.jpg" alt="Принтер Canon LBP2900" loading="lazy">
-          </div>
+          <div class="card-photo-box"><span class="card-badge">Лазерный · CAPT 2.71</span><img src="assets/canon-lbp2900.jpg" alt="Canon LBP2900" loading="lazy"></div>
           <div class="card-content">
             <h3 class="card-title">Canon LBP2900</h3>
-            <p class="card-desc">
-              Классический библиотечный лазерный принтер. Решает проблему спящего режима, настраивает службу ccpd и создает очередь печати при подключении по USB.
-            </p>
+            <p class="card-desc">Классический библиотечный лазерный принтер. Решает проблему спящего режима, настраивает службу ccpd и создает очередь печати при подключении по USB.</p>
             <ul class="card-features">
-              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> <span>Драйвер Canon CAPT 2.71 (32 / 64-bit)</span></li>
-              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> <span>Модуль ядра usblp и служба ccpd в systemd</span></li>
-              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> <span>Автоочередь в CUPS (готов к печати сразу)</span></li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg><span>Драйвер Canon CAPT 2.71 (32/64-bit)</span></li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg><span>Модуль ядра usblp и служба ccpd в systemd</span></li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg><span>Автоочередь в CUPS (готов к печати сразу)</span></li>
             </ul>
-            <div class="terminal card-cmd">
-              <div class="terminal-body">
-                <div class="terminal-row">
-                  <span class="prompt">$</span>
-                  <code class="code" id="cmd-canon">curl -fsSL https://biblioteka33.ru/linux/scripts/canon-lbp2900.sh | sudo bash</code>
-                </div>
-                <button class="btn-copy" data-target="cmd-canon" type="button" aria-label="Скопировать команду Canon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg><span>Копировать</span></button>
-              </div>
-            </div>
+            <div class="terminal card-cmd"><div class="terminal-body"><div class="terminal-row"><span class="prompt">$</span><code class="code" id="cmd-canon">curl -fsSL https://biblioteka33.ru/linux/scripts/canon-lbp2900.sh | sudo bash</code></div><button class="btn-copy" data-target="cmd-canon" type="button"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg><span>Копировать</span></button></div></div>
           </div>
         </article>
-
-        <!-- Карточка 2: Epson L800 -->
         <article class="card">
-          <div class="card-photo-box">
-            <span class="card-badge">Струйный · 6 цветов (СНПЧ)</span>
-            <img src="assets/epson-l800.png" alt="Принтер Epson L800" loading="lazy">
-          </div>
+          <div class="card-photo-box"><span class="card-badge">Струйный · 6 цветов (СНПЧ)</span><img src="assets/epson-l800.png" alt="Epson L800" loading="lazy"></div>
           <div class="card-content">
             <h3 class="card-title">Epson L800</h3>
-            <p class="card-desc">
-              Шестицветный струйный фотопринтер для качественной печати грамот, фотоматериалов и книжных обложек. Устраняет системный сбой фильтра CUPS при печати PDF.
-            </p>
+            <p class="card-desc">Шестицветный струйный фотопринтер. Устраняет системный сбой фильтра CUPS при печати PDF.</p>
             <ul class="card-features">
-              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> <span>Официальный PPD-драйвер Seiko Epson</span></li>
-              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> <span>Снятие ограничений ImageMagick на файлы PDF</span></li>
-              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> <span>Автоопределение USB и прав группы lp</span></li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg><span>Официальный PPD-драйвер Seiko Epson</span></li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg><span>Снятие ограничений ImageMagick на файлы PDF</span></li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg><span>Автоопределение USB и прав группы lp</span></li>
             </ul>
-            <div class="terminal card-cmd">
-              <div class="terminal-body">
-                <div class="terminal-row">
-                  <span class="prompt">$</span>
-                  <code class="code" id="cmd-epson">curl -fsSL https://biblioteka33.ru/linux/scripts/epson-l800.sh | sudo bash</code>
-                </div>
-                <button class="btn-copy" data-target="cmd-epson" type="button" aria-label="Скопировать команду Epson"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg><span>Копировать</span></button>
-              </div>
-            </div>
+            <div class="terminal card-cmd"><div class="terminal-body"><div class="terminal-row"><span class="prompt">$</span><code class="code" id="cmd-epson">curl -fsSL https://biblioteka33.ru/linux/scripts/epson-l800.sh | sudo bash</code></div><button class="btn-copy" data-target="cmd-epson" type="button"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg><span>Копировать</span></button></div></div>
           </div>
         </article>
-
-        <!-- Карточка 3: Epson L132 -->
         <article class="card">
-          <div class="card-photo-box">
-            <span class="card-badge">Струйный · 4 цвета (СНПЧ)</span>
-            <img src="assets/epson-l800.png" alt="Принтер Epson L132" loading="lazy">
-          </div>
+          <div class="card-photo-box"><span class="card-badge">Струйный · 4 цвета (СНПЧ)</span><img src="assets/epson-l800.png" alt="Epson L132" loading="lazy"></div>
           <div class="card-content">
             <h3 class="card-title">Epson L132</h3>
-            <p class="card-desc">
-              Экономичный четырехцветный струйный принтер со встроенными емкостями для чернил. Официальный 64-битный драйвер Epson 201401w, автоочередь в CUPS и hotplug-правило udev.
-            </p>
+            <p class="card-desc">Экономичный четырехцветный струйный принтер. Официальный 64-битный драйвер Epson 201401w.</p>
             <ul class="card-features">
-              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> <span>Официальный драйвер Epson (201401w) и PPD</span></li>
-              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> <span>Автоопределение USB и udev hotplug привязка</span></li>
-              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> <span>Снятие ограничений ImageMagick policy для PDF</span></li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg><span>Официальный драйвер Epson (201401w) и PPD</span></li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg><span>Автоопределение USB и udev hotplug</span></li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg><span>Снятие ограничений ImageMagick policy для PDF</span></li>
             </ul>
-            <div class="terminal card-cmd">
-              <div class="terminal-body">
-                <div class="terminal-row">
-                  <span class="prompt">$</span>
-                  <code class="code" id="cmd-epson132">curl -fsSL https://biblioteka33.ru/linux/scripts/epson-l132.sh | sudo bash</code>
-                </div>
-                <button class="btn-copy" data-target="cmd-epson132" type="button" aria-label="Скопировать команду Epson L132"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg><span>Копировать</span></button>
-              </div>
-            </div>
+            <div class="terminal card-cmd"><div class="terminal-body"><div class="terminal-row"><span class="prompt">$</span><code class="code" id="cmd-epson132">curl -fsSL https://biblioteka33.ru/linux/scripts/epson-l132.sh | sudo bash</code></div><button class="btn-copy" data-target="cmd-epson132" type="button"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg><span>Копировать</span></button></div></div>
           </div>
         </article>
-
-        <!-- Карточка 4: НЭБ РФ -->
         <article class="card">
-          <div class="card-photo-box">
-            <span class="card-badge">Защищенный ридер · Без root</span>
-            <div class="neb-emblem">
-              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
-                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-                <line x1="9" y1="7" x2="15" y2="7"></line>
-                <line x1="9" y1="11" x2="15" y2="11"></line>
-              </svg>
-            </div>
-          </div>
+          <div class="card-photo-box"><span class="card-badge">Защищенный ридер · Без root</span><div class="neb-emblem"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path><line x1="9" y1="7" x2="15" y2="7"></line><line x1="9" y1="11" x2="15" y2="11"></line></svg></div></div>
           <div class="card-content">
             <h3 class="card-title">Просмотрщик НЭБ РФ</h3>
-            <p class="card-desc">
-              Официальный ридер Национальной электронной библиотеки (ЭЛАР). Устраняет сбои библиотек Qt/libxml2 и восстанавливает защищенное HTTPS-соединение к rusneb.ru.
-            </p>
+            <p class="card-desc">Официальный ридер Национальной электронной библиотеки (ЭЛАР). Устраняет сбои библиотек Qt/libxml2 и восстанавливает HTTPS-соединение к rusneb.ru.</p>
             <ul class="card-features">
-              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> <span>Автоустановка клиента НЭБ без root-прав</span></li>
-              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> <span>Фикс TLS-сертификатов и криптографии</span></li>
-              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> <span>Ярлык на Рабочем столе и в меню программ</span></li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg><span>Автоустановка клиента НЭБ без root-прав</span></li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg><span>Фикс TLS-сертификатов и криптографии</span></li>
+              <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg><span>Ярлык на рабочем столе и в меню программ</span></li>
             </ul>
-            <div class="terminal card-cmd">
-              <div class="terminal-body">
-                <div class="terminal-row">
-                  <span class="prompt">$</span>
-                  <code class="code" id="cmd-neb">curl -fsSL https://biblioteka33.ru/linux/scripts/nelrf-fix.sh | bash</code>
-                </div>
-                <button class="btn-copy" data-target="cmd-neb" type="button" aria-label="Скопировать команду НЭБ"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg><span>Копировать</span></button>
-              </div>
-            </div>
+            <div class="terminal card-cmd"><div class="terminal-body"><div class="terminal-row"><span class="prompt">$</span><code class="code" id="cmd-neb">curl -fsSL https://biblioteka33.ru/linux/scripts/nelrf-fix.sh | bash</code></div><button class="btn-copy" data-target="cmd-neb" type="button"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg><span>Копировать</span></button></div></div>
           </div>
         </article>
       </div>
     </section>
 
-    <!-- Секция: Инструкция (3 простых шага) -->
     <section class="section" id="guide">
       <div class="section-head">
         <h2 class="section-title">Как это работает: 3 простых шага</h2>
         <p class="section-desc">Справится любой сотрудник библиотеки без специальной технической подготовки.</p>
       </div>
-
       <div class="steps-grid">
-        <div class="step-card">
-          <div class="step-num">1</div>
-          <h3 class="step-title">Откройте терминал</h3>
-          <p class="step-desc">
-            Нажмите сочетание клавиш <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd> на клавиатуре или откройте меню «Пуск» → «Системные» → «Терминал Fly».
-          </p>
-        </div>
-
-        <div class="step-card">
-          <div class="step-num">2</div>
-          <h3 class="step-title">Вставьте команду</h3>
-          <p class="step-desc">
-            Нажмите кнопку «Копировать» у нужного компонента и вставьте её в окно терминала комбинацией <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>V</kbd>.
-          </p>
-        </div>
-
-        <div class="step-card">
-          <div class="step-num">3</div>
-          <h3 class="step-title">Нажмите Enter</h3>
-          <p class="step-desc">
-            Скрипт выполнит настройку автоматически. Если появится запрос пароля администратора — наберите его (символы при вводе скрываются).
-          </p>
-        </div>
+        <div class="step-card"><div class="step-num">1</div><h3 class="step-title">Откройте терминал</h3><p class="step-desc">Нажмите <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>T</kbd> или откройте меню «Пуск» → «Системные» → «Терминал».</p></div>
+        <div class="step-card"><div class="step-num">2</div><h3 class="step-title">Вставьте команду</h3><p class="step-desc">Нажмите «Копировать» у нужного компонента и вставьте <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd>.</p></div>
+        <div class="step-card"><div class="step-num">3</div><h3 class="step-title">Нажмите Enter</h3><p class="step-desc">Скрипт выполнит настройку автоматически. При запросе пароля — введите его (символы скрываются).</p></div>
       </div>
     </section>
 
-    <!-- Секция FAQ -->
     <section class="section" id="faq">
       <div class="section-head">
         <h2 class="section-title">Частые вопросы</h2>
-        <p class="section-desc">Подсказки и ответы на частые ситуации при настройке библиотечного оборудования.</p>
+        <p class="section-desc">Подсказки и ответы на частые ситуации при настройке оборудования.</p>
       </div>
-
       <div class="faq-list">
-        <details class="faq-item">
-          <summary class="faq-question"><span>Нужно ли вручную настраивать принтер в CUPS после установки?</span><svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></summary>
-          <div class="faq-answer">
-            Нет, всё происходит автоматически. Скрипт сам регистрирует устройство в CUPS, прописывает правильный PPD-профиль, включает очередь и привязывает порт. Принтер сразу готов к печати из браузера и LibreOffice.
-          </div>
-        </details>
-
-        <details class="faq-item">
-          <summary class="faq-question"><span>При вводе пароля в терминале не появляются символы — это нормально?</span><svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></summary>
-          <div class="faq-answer">
-            Да, это штатный механизм безопасности Linux: вводимые символы и звёздочки скрываются, чтобы посторонние не могли подсмотреть длину пароля. Просто наберите пароль и нажмите клавишу Enter.
-          </div>
-        </details>
-
-        <details class="faq-item">
-          <summary class="faq-question"><span>Почему просмотрщик НЭБ РФ раньше писал «Не удаётся подключиться к серверу»?</span><svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></summary>
-          <div class="faq-answer">
-            Сервер <code>rusneb.ru</code> обновил стандарты шифрования TLS. Старый просмотрщик из комплекта поставки не умел с ними работать. Скрипт аккуратно обновляет криптографический модуль программы без вмешательства в системные библиотеки Astra Linux.
-          </div>
-        </details>
-
-        <details class="faq-item">
-          <summary class="faq-question"><span>Что делать, если принтер Canon LBP2900 перестал печатать после переподключения кабеля?</span><svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></summary>
-          <div class="faq-answer">
-            При переподключении USB-кабеля достаточно на 3 секунды выключить и снова включить кнопку питания на корпусе самого принтера. Либо выполните в терминале команду: <code>sudo systemctl restart ccpd</code>.
-          </div>
-        </details>
-
-        <details class="faq-item">
-          <summary class="faq-question"><span>Что делать, если терминал пишет «curl: command not found»?</span><svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></summary>
-          <div class="faq-answer">
-            Установите утилиту загрузки командой: <code>sudo apt update &amp;&amp; sudo apt install -y curl</code>, а затем повторите запуск нужного компонента.
-          </div>
-        </details>
-
-        <details class="faq-item">
-          <summary class="faq-question"><span>Безопасны ли эти скрипты для рабочей библиотечной системы?</span><svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></summary>
-          <div class="faq-answer">
-            Полностью безопасны. Скрипты скачивают только официальные пакеты производителей и НЭБ, перед любыми правками конфигураций создают резервные копии (<code>.bak</code>), а весь исходный код открыт и доступен для проверки.
-          </div>
-        </details>
+        <details class="faq-item"><summary class="faq-question"><span>Нужно ли вручную настраивать принтер в CUPS после установки?</span><svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></summary><div class="faq-answer">Нет, всё происходит автоматически. Скрипт сам регистрирует устройство в CUPS, прописывает правильный PPD-профиль, включает очередь и привязывает порт.</div></details>
+        <details class="faq-item"><summary class="faq-question"><span>При вводе пароля в терминале не появляются символы — это нормально?</span><svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></summary><div class="faq-answer">Да, это штатный механизм безопасности Linux. Просто наберите пароль и нажмите Enter.</div></details>
+        <details class="faq-item"><summary class="faq-question"><span>Почему просмотрщик НЭБ РФ раньше писал «Не удаётся подключиться к серверу»?</span><svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></summary><div class="faq-answer">Сервер <code>rusneb.ru</code> обновил стандарты шифрования TLS. Скрипт обновляет криптографический модуль без вмешательства в системные библиотеки Astra Linux.</div></details>
+        <details class="faq-item"><summary class="faq-question"><span>Что делать, если принтер Canon LBP2900 перестал печатать после переподключения кабеля?</span><svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></summary><div class="faq-answer">Перезапустите службу: <code>sudo systemctl restart ccpd</code></div></details>
+        <details class="faq-item"><summary class="faq-question"><span>Что делать, если терминал пишет «curl: command not found»?</span><svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></summary><div class="faq-answer">Установите утилиту: <code>sudo apt update &amp;&amp; sudo apt install -y curl</code></div></details>
+        <details class="faq-item"><summary class="faq-question"><span>Безопасны ли эти скрипты для рабочей библиотечной системы?</span><svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg></summary><div class="faq-answer">Да. Скрипты скачивают только официальные пакеты производителей, перед правками создают резервные копии, исходный код открыт на GitHub.</div></details>
       </div>
     </section>
-
   </main>
 
-  <!-- Подвал -->
   <footer class="site-footer">
     <div class="wrap footer-inner">
       <div>
-        <strong>МУК «Библиотека»</strong> · biblioteka33.ru/linux
-        <div style="font-size: 12.5px; margin-top: 3px; color: var(--txt-soft);">Автоматизация рабочих мест и настройка оборудования на отечественных ОС.</div>
+        biblioteka33.ru/linux
+        <div style="font-size:12.5px;margin-top:3px;color:var(--txt-soft);">Автоматизация рабочих мест и настройка оборудования на отечественных ОС.</div>
       </div>
       <div class="footer-links">
         <a href="scripts/setup.sh">setup.sh</a>
@@ -487,85 +287,19 @@
     </div>
   </footer>
 
-  <!-- Всплывающий тост -->
   <div class="toast" id="toast" role="status" aria-live="polite">
     <svg class="toast-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
     <span>Команда скопирована в буфер обмена</span>
   </div>
 
-  <!-- Надежный Vanilla JS буфера обмена -->
   <script>
-    (function () {
+    (function(){
       'use strict';
-
-      var toast = document.getElementById('toast');
-      var toastTimer = null;
-
-      function showToast() {
-        if (!toast) return;
-        toast.classList.add('active');
-        if (toastTimer) clearTimeout(toastTimer);
-        toastTimer = setTimeout(function () {
-          toast.classList.remove('active');
-        }, 2200);
-      }
-
-      function copyToClipboard(text) {
-        if (!text) return Promise.reject(new Error('Empty text'));
-        if (navigator.clipboard && window.isSecureContext) {
-          return navigator.clipboard.writeText(text);
-        }
-        return new Promise(function (resolve, reject) {
-          var el = document.createElement('textarea');
-          el.value = text;
-          el.style.position = 'fixed';
-          el.style.top = '-9999px';
-          el.style.left = '-9999px';
-          el.setAttribute('readonly', '');
-          document.body.appendChild(el);
-          el.select();
-          try {
-            var ok = document.execCommand('copy');
-            document.body.removeChild(el);
-            if (ok) resolve(); else reject(new Error('execCommand failed'));
-          } catch (err) {
-            document.body.removeChild(el);
-            reject(err);
-          }
-        });
-      }
-
-      document.querySelectorAll('.btn-copy').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          var targetId = btn.getAttribute('data-target');
-          var targetEl = document.getElementById(targetId);
-          if (!targetEl) return;
-
-          var text = targetEl.textContent.trim();
-          var span = btn.querySelector('span');
-          var origText = span ? span.textContent : 'Копировать';
-
-          copyToClipboard(text).then(function () {
-            btn.classList.add('copied');
-            if (span) span.textContent = 'Скопировано!';
-            showToast();
-            setTimeout(function () {
-              btn.classList.remove('copied');
-              if (span) span.textContent = origText;
-            }, 2000);
-          }).catch(function () {
-            showToast();
-          });
-        });
-      });
-
-      // Хоткей C для быстрого копирования основной команды мастера
-      document.addEventListener('keydown', function (e) {
-        if ((e.key === 'c' || e.key === 'C' || e.key === 'с' || e.key === 'С') && !e.ctrlKey && !e.metaKey && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
-          var masterBtn = document.querySelector('[data-target="cmd-master"]');
-          if (masterBtn) masterBtn.click();
-        }
-      });
+      var toast=document.getElementById('toast'),toastTimer=null;
+      function showToast(){if(!toast)return;toast.classList.add('active');if(toastTimer)clearTimeout(toastTimer);toastTimer=setTimeout(function(){toast.classList.remove('active');},2200);}
+      function copyToClipboard(text){if(!text)return Promise.reject(new Error('Empty'));if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(text);return new Promise(function(resolve,reject){var el=document.createElement('textarea');el.value=text;el.style.position='fixed';el.style.top='-9999px';el.style.left='-9999px';el.setAttribute('readonly','');document.body.appendChild(el);el.select();try{var ok=document.execCommand('copy');document.body.removeChild(el);if(ok)resolve();else reject(new Error('execCommand failed'));}catch(err){document.body.removeChild(el);reject(err);}});}
+      document.querySelectorAll('.btn-copy').forEach(function(btn){btn.addEventListener('click',function(){var targetId=btn.getAttribute('data-target');var targetEl=document.getElementById(targetId);if(!targetEl)return;var text=targetEl.textContent.trim();var span=btn.querySelector('span');var origText=span?span.textContent:'Копировать';copyToClipboard(text).then(function(){btn.classList.add('copied');if(span)span.textContent='Скопировано!';showToast();setTimeout(function(){btn.classList.remove('copied');if(span)span.textContent=origText;},2000);}).catch(function(){showToast();});});});
+      document.addEventListener('keydown',function(e){if((e.key==='c'||e.key==='C')&&!e.ctrlKey&&!e.metaKey&&e.target.tagName!=='INPUT'&&e.target.tagName!=='TEXTAREA'){var masterBtn=document.querySelector('[data-target="cmd-master"]');if(masterBtn)masterBtn.click();}});
     })();
   </script>
   <script src="assets/updater.js" defer></script>
