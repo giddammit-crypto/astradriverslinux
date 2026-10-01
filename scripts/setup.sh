@@ -64,18 +64,27 @@ check_and_install_deps() {
 #  ФАЗА 2: авто-обновление с GitHub
 # =========================================================
 check_and_self_update() {
-  # пропускаем при pipe-запуске (curl | bash)
-  [ "${BASH_SOURCE[0]:-}" = "-" ] || [ -z "${BASH_SOURCE[0]:-}" ] && return 0
+  # Пропускаем проверку обновлений при pipe-запуске (curl | bash)
+  if [ ! -f "${BASH_SOURCE[0]:-}" ] || [ "${BASH_SOURCE[0]:-}" = "bash" ] || [ "${BASH_SOURCE[0]:-}" = "-" ]; then
+    return 0
+  fi
 
   log "Проверка обновлений с GitHub..."
   local SELF_DIR LOCAL_SHA REMOTE_SHA
   SELF_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
   LOCAL_SHA=""
-  for vj in "$SELF_DIR/../.version.json" "$SELF_DIR/.version.json"; do
-    [ -f "$vj" ] && LOCAL_SHA=$(sed -nE 's/.*"(sha|commit)":[[:space:]]*"([a-f0-9]{40})".*/\2/p' "$vj" 2>/dev/null | head -1) && \
-      [ -n "$LOCAL_SHA" ] && break || true
-  done
+  if command -v git >/dev/null 2>&1 && [ -d "$SELF_DIR/../.git" ]; then
+    LOCAL_SHA=$(git -C "$SELF_DIR/.." rev-parse HEAD 2>/dev/null || echo "")
+  elif command -v git >/dev/null 2>&1 && [ -d "$SELF_DIR/.git" ]; then
+    LOCAL_SHA=$(git -C "$SELF_DIR" rev-parse HEAD 2>/dev/null || echo "")
+  fi
+  if [ -z "${LOCAL_SHA:-}" ]; then
+    for vj in "$SELF_DIR/../.version.json" "$SELF_DIR/.version.json"; do
+      [ -f "$vj" ] && LOCAL_SHA=$(sed -nE 's/.*"(sha|commit)":[[:space:]]*"([a-f0-9]{40})".*/\2/p' "$vj" 2>/dev/null | head -1) && \
+        [ -n "$LOCAL_SHA" ] && break || true
+    done
+  fi
 
   REMOTE_SHA=""
   if command -v git >/dev/null 2>&1; then
@@ -171,6 +180,7 @@ else
     fi
   }
 
+  dl ".version.json"            || true
   dl "installer_gui.py"         || true
   dl "assets/hero-cosmo.png"    || true
   dl "scripts/install.sh"       || true
@@ -180,6 +190,8 @@ else
   dl "scripts/nelrf-fix.sh"     || true
   dl "scripts/onlyoffice.sh"    || true
 fi
+
+export COSMO_PARENT=1
 
 chmod +x "$WORK_DIR/installer_gui.py" 2>/dev/null || true
 chmod +x "$WORK_DIR/scripts/"*.sh     2>/dev/null || true

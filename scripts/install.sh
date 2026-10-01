@@ -65,17 +65,25 @@ check_deps
 #  АВТООБНОВЛЕНИЕ С GITHUB
 # ============================================================
 auto_update() {
+  [ "${COSMO_PARENT:-0}" = "1" ] && return 0
   log "Проверка обновлений..."
   local LOCAL_SHA REMOTE_SHA
   LOCAL_SHA=""
-  for vj in \
-    "${SCRIPT_DIR:+$SCRIPT_DIR/../.version.json}" \
-    "${SCRIPT_DIR:+$SCRIPT_DIR/.version.json}" \
-    "$(pwd)/.version.json"; do
-    [ -n "${vj:-}" ] && [ -f "$vj" ] && \
-      LOCAL_SHA=$(sed -nE 's/.*"(sha|commit)":[[:space:]]*"([a-f0-9]{40})".*/\2/p' "$vj" 2>/dev/null | head -1 || echo "") && \
-      [ -n "$LOCAL_SHA" ] && break || true
-  done
+  if command -v git >/dev/null 2>&1 && [ -n "${SCRIPT_DIR:-}" ] && [ -d "$SCRIPT_DIR/../.git" ]; then
+    LOCAL_SHA=$(git -C "$SCRIPT_DIR/.." rev-parse HEAD 2>/dev/null || echo "")
+  elif command -v git >/dev/null 2>&1 && [ -d ".git" ]; then
+    LOCAL_SHA=$(git rev-parse HEAD 2>/dev/null || echo "")
+  fi
+  if [ -z "${LOCAL_SHA:-}" ]; then
+    for vj in \
+      "${SCRIPT_DIR:+$SCRIPT_DIR/../.version.json}" \
+      "${SCRIPT_DIR:+$SCRIPT_DIR/.version.json}" \
+      "$(pwd)/.version.json"; do
+      [ -n "${vj:-}" ] && [ -f "$vj" ] && \
+        LOCAL_SHA=$(sed -nE 's/.*"(sha|commit)":[[:space:]]*"([a-f0-9]{40})".*/\2/p' "$vj" 2>/dev/null | head -1 || echo "") && \
+        [ -n "$LOCAL_SHA" ] && break || true
+    done
+  fi
 
   REMOTE_SHA=""
   if command -v git >/dev/null 2>&1; then
