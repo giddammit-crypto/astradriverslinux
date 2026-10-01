@@ -174,7 +174,7 @@ fi
 
 if [ -n "$APP_BIN" ] && command -v ldd >/dev/null 2>&1; then
   sep "Диагностика зависимостей"
-  LDD_OUT=$(ldd "$APP_BIN" 2>/dev/null || echo "")
+  LDD_OUT=$(LD_LIBRARY_PATH="${APP_DIR}/lib:${LD_LIBRARY_PATH:-}" ldd "$APP_BIN" 2>/dev/null || echo "")
   MISSING_LIBS=$(echo "$LDD_OUT" | grep 'not found' | awk '{print $1}' || echo "")
   if [ -n "${MISSING_LIBS:-}" ]; then
     warn "Отсутствуют библиотеки:"; echo "$MISSING_LIBS"; WARNS=$((WARNS+1))
@@ -266,7 +266,9 @@ sep "Копирование недостающих библиотек"
 LIBDIR="$APP_DIR/lib"; mkdir -p "$LIBDIR"
 
 copy_lib() {
-  local name="$1" patterns="$2" dst="$LIBDIR/$name"
+  local name="$1"
+  local patterns="$2"
+  local dst="$LIBDIR/$name"
   [ -f "$dst" ] && { ok "$name уже есть"; return; }
   local src=""
   for pat in $patterns; do
@@ -290,10 +292,14 @@ copy_lib "libcrypto.so.1.0.0" "libcrypto.so.1.0.0 libcrypto.so.1.0.* libcrypto.s
 # ============================================================
 if command -v apt-get >/dev/null 2>&1; then
   sep "Системные apt-зависимости"
-  SUDO_CMD=""
-  [ "$(id -u)" -ne 0 ] && SUDO_CMD="sudo"
   NEEDED_PKGS="libxml2 libxcb1 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-render-util0 libxcb-xinerama0 libxkbcommon-x11-0 libfontconfig1 libfreetype6 ca-certificates"
-  $SUDO_CMD apt-get install -y -qq $NEEDED_PKGS 2>/dev/null && ok "apt-зависимости установлены" || warn "Часть зависимостей не установлена"
+  if [ "$(id -u)" -eq 0 ]; then
+    apt-get install -y -qq $NEEDED_PKGS 2>/dev/null && ok "apt-зависимости установлены" || warn "Часть зависимостей не установлена"
+  elif sudo -n true 2>/dev/null; then
+    sudo -n apt-get install -y -qq $NEEDED_PKGS 2>/dev/null && ok "apt-зависимости установлены" || warn "Часть зависимостей не установлена"
+  else
+    ok "Все библиотеки уже скопированы в lib/ (установка apt без root пропущена)"
+  fi
 fi
 
 # ============================================================
