@@ -122,20 +122,41 @@ else
     ok "Найден локальный пакет: $CAPT_PATH"
 fi
 
-# ----------------------------------------------------------------------------
-# 3. Установка пакетов
-# ----------------------------------------------------------------------------
-log "Установка cndrvcups-common..."
-dpkg -i "$COMMON_PATH" 2>/dev/null || {
-    warn "Доустановка зависимостей через apt-get -f..."
-    DEBIAN_FRONTEND=noninteractive apt-get install -f -y -qq 2>/dev/null || true
+patch_cndrv_deb() {
+    local src_deb="$1"
+    local out_deb="$WORK/patched_$(basename "$src_deb")"
+    local tmp_dir="$WORK/unpack_$(basename "$src_deb" .deb)"
+    mkdir -p "$tmp_dir"
+    dpkg-deb -R "$src_deb" "$tmp_dir" 2>/dev/null || return 1
+    local ctrl="$tmp_dir/DEBIAN/control"
+    if [ -f "$ctrl" ]; then
+        sed -i 's/libcups2 | libcupsys2/libcups2 | libcups2t64 | libcupsys2/g' "$ctrl"
+        sed -i 's/libcups2 (>=/libcups2 | libcups2t64 (>=/g' "$ctrl"
+        if ! apt-cache show libglade2-0 >/dev/null 2>&1; then
+            sed -i 's/libglade2-0 (>= [^)]*),*//g' "$ctrl"
+        fi
+        sed -i 's/,[[:space:]]*,/,/g; s/Depends:[[:space:]]*,/Depends:/; s/,[[:space:]]*$//' "$ctrl"
+    fi
+    dpkg-deb -b "$tmp_dir" "$out_deb" >/dev/null 2>&1 || return 1
+    rm -rf "$tmp_dir"
+    echo "$out_deb"
 }
 
-log "Установка cndrvcups-capt..."
-dpkg -i "$CAPT_PATH" 2>/dev/null || {
-    warn "Доустановка зависимостей через apt-get -f..."
+log "Установка cndrvcups-common..."
+if ! dpkg -i "$COMMON_PATH" 2>/dev/null; then
+    warn "Стандартная установка не удалась — адаптация под версию ОС..."
+    PATCHED_COMMON=$(patch_cndrv_deb "$COMMON_PATH") || PATCHED_COMMON="$COMMON_PATH"
     DEBIAN_FRONTEND=noninteractive apt-get install -f -y -qq 2>/dev/null || true
-}
+    dpkg -i "$PATCHED_COMMON" 2>/dev/null || dpkg -i --force-all "$PATCHED_COMMON" 2>/dev/null || true
+fi
+
+log "Установка cndrvcups-capt..."
+if ! dpkg -i "$CAPT_PATH" 2>/dev/null; then
+    warn "Стандартная установка не удалась — адаптация под версию ОС..."
+    PATCHED_CAPT=$(patch_cndrv_deb "$CAPT_PATH") || PATCHED_CAPT="$CAPT_PATH"
+    DEBIAN_FRONTEND=noninteractive apt-get install -f -y -qq 2>/dev/null || true
+    dpkg -i "$PATCHED_CAPT" 2>/dev/null || dpkg -i --force-all "$PATCHED_CAPT" 2>/dev/null || true
+fi
 
 ldconfig 2>/dev/null || true
 ok "Пакеты Canon CAPT успешно установлены"

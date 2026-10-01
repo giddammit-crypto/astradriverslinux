@@ -73,8 +73,16 @@ if [ -z "${DEB_PATH:-}" ]; then
     fi
 fi
 
-log "Установка..."
-dpkg -i "$DEB_PATH" 2>/dev/null || { DEBIAN_FRONTEND=noninteractive apt-get install -f -y -qq 2>/dev/null || true; }
+log "Установка пакета драйвера..."
+# Удаляем старый симлинк фильтра, так как в postinst пакета вызывается ln -s без -f
+rm -f /usr/lib/cups/filter/epson-inkjet-printer-201401w 2>/dev/null || true
+
+if ! dpkg -i "$DEB_PATH" 2>/dev/null; then
+    warn "Доустановка зависимостей через apt-get..."
+    DEBIAN_FRONTEND=noninteractive apt-get install -f -y -qq 2>/dev/null || true
+    rm -f /usr/lib/cups/filter/epson-inkjet-printer-201401w 2>/dev/null || true
+    dpkg -i "$DEB_PATH" 2>/dev/null || true
+fi
 ldconfig 2>/dev/null || true
 
 PPDFILE=$(find /usr/share/cups/model /opt -iname '*L132*.ppd*' 2>/dev/null | head -1) || true

@@ -224,10 +224,40 @@ sep "Создание лаунчера"
 BIN_DIR="$APP_DIR/bin"; mkdir -p "$BIN_DIR"
 LAUNCHER="$BIN_DIR/nelrfviewer-launcher.sh"
 
+# Создаем вспомогательные симлинки для совместимости
+[ -f "$APP_DIR/bin/nelrfviewer" ] && [ ! -e "$APP_DIR/bin/elar-nelrfviewer" ] && ln -sf nelrfviewer "$APP_DIR/bin/elar-nelrfviewer" 2>/dev/null || true
+[ -f "$APP_DIR/bin/nelrfviewer" ] && [ ! -e "$APP_DIR/nelrfviewer" ] && ln -sf bin/nelrfviewer "$APP_DIR/nelrfviewer" 2>/dev/null || true
+[ -f "$APP_DIR/bin/elar-nelrfviewer.sh" ] && [ ! -e "$APP_DIR/elar-nelrfviewer.sh" ] && ln -sf bin/elar-nelrfviewer.sh "$APP_DIR/elar-nelrfviewer.sh" 2>/dev/null || true
+
 cat > "$LAUNCHER" << LAUNCHER_EOF
 #!/bin/bash
-export DISPLAY="\${DISPLAY:-${USER_DISPLAY}}"
-export XAUTHORITY="\${XAUTHORITY:-${USER_XAUTH}}"
+# Логирование при запуске из графического интерфейса
+if [ ! -t 1 ]; then
+  exec >> "${APP_DIR}/nelrfviewer.log" 2>&1
+fi
+
+# Автоопределение DISPLAY и XAUTHORITY для Wayland, X11 и Astra Linux Fly DE
+if [ -z "\${DISPLAY:-}" ]; then
+  for _sock in /tmp/.X11-unix/X*; do
+    if [ -S "\$_sock" ] && [ -O "\$_sock" ]; then
+      export DISPLAY=":\${_sock##*X}"
+      break
+    fi
+  done
+  [ -z "\${DISPLAY:-}" ] && export DISPLAY=":0"
+fi
+
+if [ -z "\${XAUTHORITY:-}" ] || [ ! -r "\${XAUTHORITY:-}" ]; then
+  if [ -r "\$HOME/.Xauthority" ]; then
+    export XAUTHORITY="\$HOME/.Xauthority"
+  elif [ -n "\${XDG_RUNTIME_DIR:-}" ]; then
+    _auth=\$(find "\$XDG_RUNTIME_DIR" -maxdepth 2 \( -name "*Xauthority*" -o -name "*Xwaylandauth*" \) -readable 2>/dev/null | head -1 || echo "")
+    [ -n "\$_auth" ] && export XAUTHORITY="\$_auth" || unset XAUTHORITY
+  else
+    unset XAUTHORITY
+  fi
+fi
+
 export LD_LIBRARY_PATH="${APP_DIR}/lib:\${LD_LIBRARY_PATH:-}"
 export QT_PLUGIN_PATH="${APP_DIR}/bin"
 export QT_QPA_PLATFORM="\${QT_QPA_PLATFORM:-xcb}"
@@ -235,12 +265,21 @@ export QT_SCALE_FACTOR="\${QT_SCALE_FACTOR:-1}"
 export SSL_CERT_FILE="${SSL_DIR}/ca-bundle.pem"
 export OPENSSL_CONF="${SSL_DIR}/openssl.cnf"
 export REQUESTS_CA_BUNDLE="${SSL_DIR}/ca-bundle.pem"
+
 cd "${APP_DIR}"
-if   [ -x "${APP_DIR}/bin/elar-nelrfviewer" ]; then exec "${APP_DIR}/bin/elar-nelrfviewer" "\$@"
-elif [ -x "${APP_DIR}/elar-nelrfviewer" ];     then exec "${APP_DIR}/elar-nelrfviewer" "\$@"
-elif [ -f "${APP_DIR}/elar-nelrfviewer.sh" ];  then exec bash "${APP_DIR}/elar-nelrfviewer.sh" "\$@"
-elif [ -n "${APP_BIN:-}" ] && [ -x "${APP_BIN:-}" ]; then exec "${APP_BIN}" "\$@"
-else echo "Ошибка: исполняемый файл не найден в ${APP_DIR}" >&2; exit 1
+
+# Запуск исполняемого файла НЭБ РФ
+if [ -x "${APP_DIR}/bin/nelrfviewer" ]; then
+  exec "${APP_DIR}/bin/nelrfviewer" "\$@"
+elif [ -x "${APP_DIR}/bin/elar-nelrfviewer" ]; then
+  exec "${APP_DIR}/bin/elar-nelrfviewer" "\$@"
+elif [ -x "${APP_BIN}" ]; then
+  exec "${APP_BIN}" "\$@"
+elif [ -f "${APP_DIR}/bin/elar-nelrfviewer.sh" ]; then
+  exec bash "${APP_DIR}/bin/elar-nelrfviewer.sh" "\$@"
+else
+  echo "Ошибка: исполняемый файл НЭБ РФ не найден в ${APP_DIR}" >&2
+  exit 1
 fi
 LAUNCHER_EOF
 chmod +x "$LAUNCHER"
@@ -249,15 +288,16 @@ ok "Лаунчер: $LAUNCHER"; FIXED=$((FIXED+1))
 # ============================================================
 #  ФАЗА 5: Патч elar-nelrfviewer.sh (если есть)
 # ============================================================
-if [ -f "$APP_DIR/elar-nelrfviewer.sh" ]; then
-  sep "Патч elar-nelrfviewer.sh"
-  [ -f "$APP_DIR/elar-nelrfviewer.sh.bak" ] || cp -a "$APP_DIR/elar-nelrfviewer.sh" "$APP_DIR/elar-nelrfviewer.sh.bak"
-  sed -i "s|^APP=.*|APP=\"$APP_DIR\"|" "$APP_DIR/elar-nelrfviewer.sh" 2>/dev/null || true
-  sed -i '/^export LD_LIBRARY_PATH/d' "$APP_DIR/elar-nelrfviewer.sh" 2>/dev/null || true
-  sed -i "2a export LD_LIBRARY_PATH=\"${APP_DIR}/lib:\${LD_LIBRARY_PATH:-}\"" "$APP_DIR/elar-nelrfviewer.sh" 2>/dev/null || true
-  sed -i "3a export SSL_CERT_FILE=\"${SSL_DIR}/ca-bundle.pem\"" "$APP_DIR/elar-nelrfviewer.sh" 2>/dev/null || true
-  ok "elar-nelrfviewer.sh пропатчен"; FIXED=$((FIXED+1))
-fi
+for sh_file in "$APP_DIR/bin/elar-nelrfviewer.sh" "$APP_DIR/elar-nelrfviewer.sh"; do
+  if [ -f "$sh_file" ]; then
+    [ -f "${sh_file}.bak" ] || cp -a "$sh_file" "${sh_file}.bak"
+    sed -i "s|^APP=.*|APP=\"$APP_DIR\"|" "$sh_file" 2>/dev/null || true
+    sed -i '/^export LD_LIBRARY_PATH/d' "$sh_file" 2>/dev/null || true
+    sed -i "2a export LD_LIBRARY_PATH=\"${APP_DIR}/lib:\${LD_LIBRARY_PATH:-}\"" "$sh_file" 2>/dev/null || true
+    sed -i "3a export SSL_CERT_FILE=\"${SSL_DIR}/ca-bundle.pem\"" "$sh_file" 2>/dev/null || true
+    ok "Скрипт $(basename "$sh_file") пропатчен"; FIXED=$((FIXED+1))
+  fi
+done
 
 # ============================================================
 #  ФАЗА 6: Библиотеки — libssl, libxml2, libcrypto
@@ -316,7 +356,9 @@ fi
 # ============================================================
 #  ФАЗА 9: Desktop-ярлыки (Applications + Desktop + XDG)
 # ============================================================
-sep "Создание ярлыков рабочего стола"
+ICON_PATH="${APP_DIR}/share/elar-nelrfviewer.png"
+[ -f "$ICON_PATH" ] || ICON_PATH="elar-nelrfviewer"
+
 DESKTOP_CONTENT="[Desktop Entry]
 Version=1.0
 Type=Application
@@ -324,12 +366,13 @@ Name=НЭБ РФ
 Name[ru]=НЭБ РФ
 GenericName=Просмотрщик НЭБ РФ
 Comment=Национальная электронная библиотека (ЭЛАР)
-Exec=bash \"$LAUNCHER\" %F
-Icon=elar-nelrfviewer
+Exec=${LAUNCHER}
+Path=${APP_DIR}
+Icon=${ICON_PATH}
 Terminal=false
 Categories=Office;Viewer;
-MimeType=application/x-neb;
-StartupNotify=true
+StartupWMClass=nelrfviewer
+StartupNotify=false
 "
 
 APPS_DIR="${REAL_HOME}/.local/share/applications"
@@ -337,18 +380,31 @@ run_as_user "mkdir -p \"$APPS_DIR\""
 echo "$DESKTOP_CONTENT" > "$APPS_DIR/elar-nelrfviewer.desktop"
 run_as_user "chmod +x \"$APPS_DIR/elar-nelrfviewer.desktop\"" || true
 run_as_user "gio set \"$APPS_DIR/elar-nelrfviewer.desktop\" metadata::trusted true 2>/dev/null" || true
+command -v update-desktop-database >/dev/null 2>&1 && update-desktop-database "$APPS_DIR" 2>/dev/null || true
 ok "Ярлык в меню: $APPS_DIR"
 
-# Рабочий стол — все варианты (Fly DE, GNOME, XFCE, XDG)
-for desktop_dir in \
-  "$(run_as_user 'xdg-user-dir DESKTOP 2>/dev/null')" \
-  "${REAL_HOME}/Рабочий стол" "${REAL_HOME}/Desktop" \
-  "${REAL_HOME}/Рабочий_стол" "${REAL_HOME}/.fly/desktop"; do
-  [ -n "${desktop_dir:-}" ] && [ -d "$desktop_dir" ] && \
-  { echo "$DESKTOP_CONTENT" > "$desktop_dir/elar-nelrfviewer.desktop"
-    run_as_user "chmod +x \"$desktop_dir/elar-nelrfviewer.desktop\"" || true
-    run_as_user "gio set \"$desktop_dir/elar-nelrfviewer.desktop\" metadata::trusted true 2>/dev/null" || true
-    ok "Ярлык на рабочем столе: $desktop_dir"; break; }
+# Рабочий стол — все существующие варианты (Fly DE, GNOME, XFCE, XDG)
+DESKTOP_DIRS=(
+  "$(run_as_user 'xdg-user-dir DESKTOP 2>/dev/null')"
+  "${REAL_HOME}/Рабочий стол"
+  "${REAL_HOME}/Desktop"
+  "${REAL_HOME}/Рабочий_стол"
+  "${REAL_HOME}/.fly/desktop"
+)
+
+SEEN_DIRS=""
+for desktop_dir in "${DESKTOP_DIRS[@]}"; do
+  [ -z "${desktop_dir:-}" ] || [ ! -d "$desktop_dir" ] && continue
+  echo "$SEEN_DIRS" | grep -F -q "|$desktop_dir|" && continue
+  SEEN_DIRS="${SEEN_DIRS}|${desktop_dir}|"
+
+  target_dt="$desktop_dir/elar-nelrfviewer.desktop"
+  echo "$DESKTOP_CONTENT" > "$target_dt"
+  run_as_user "chmod +x \"$target_dt\"" || true
+  run_as_user "gio set \"$target_dt\" metadata::trusted true 2>/dev/null" || true
+  csum=$(sha256sum "$target_dt" 2>/dev/null | awk '{print $1}' || echo "")
+  [ -n "$csum" ] && run_as_user "gio set \"$target_dt\" metadata::xfce-exe-checksum \"$csum\" 2>/dev/null" || true
+  ok "Ярлык на рабочем столе: $desktop_dir"
 done
 
 FIXED=$((FIXED+1))

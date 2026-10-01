@@ -121,9 +121,7 @@ def get_elevated_command(base_cmd, gui_mode=False):
 
     if gui_mode and (os.environ.get("DISPLAY") or os.environ.get("WAYLAND_DISPLAY")):
         if shutil.which("pkexec"):
-            display = os.environ.get("DISPLAY", ":0")
-            xauth = os.environ.get("XAUTHORITY", os.path.expanduser("~/.Xauthority"))
-            return ["pkexec", "env", f"DISPLAY={display}", f"XAUTHORITY={xauth}"] + list(base_cmd)
+            return ["pkexec"] + list(base_cmd)
 
     return ["sudo"] + list(base_cmd)
 

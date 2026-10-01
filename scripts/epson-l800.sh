@@ -167,11 +167,11 @@ fi
 # ----------------------------------------------------------------------------
 if [ "$DEB" != "MANUALLY_INSTALLED_FROM_RPM" ]; then
     [ -n "$DEB" ] && [ -f "$DEB" ] || die "Не удалось найти или скачать пакет драйвера Epson L800"
-    log "Установка пакета $(basename "$DEB")..."
-    dpkg -i "$DEB" 2>/dev/null || {
-        log "  Доустановка зависимостей...";
-        DEBIAN_FRONTEND=noninteractive apt-get install -f -y -qq 2>/dev/null || true;
-    }
+    if ! dpkg -i "$DEB" 2>/dev/null; then
+        log "  Доустановка зависимостей через apt-get..."
+        DEBIAN_FRONTEND=noninteractive apt-get install -f -y -qq 2>/dev/null || true
+        dpkg -i "$DEB" 2>/dev/null || true
+    fi
 fi
 
 # Проверка PPD

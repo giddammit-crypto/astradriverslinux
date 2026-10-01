@@ -224,12 +224,19 @@ fi
 if [ "$CAN_RUN_GUI" -eq 1 ] && [ "${1:-}" != "--cli" ]; then
   log "Запуск графического мастера..."
   xhost +si:localuser:root >/dev/null 2>&1 || true
+  if [ "$(id -u)" -ne 0 ] && ! sudo -n true 2>/dev/null; then
+    [ -c /dev/tty ] && sudo -v </dev/tty 2>/dev/null || true
+  fi
   exec python3 "$WORK_DIR/installer_gui.py" "$@"
 else
   [ "$HAS_DISPLAY" -eq 0 ]     && log "Графическое окружение не обнаружено. Консольный режим..."
   [ "${1:-}" = "--cli" ]        && log "Консольный режим (--cli)"
   [ "$CAN_RUN_GUI" -eq 0 ] && [ "$HAS_DISPLAY" -eq 1 ] && \
     warn "GTK3 недоступен. Переход в консольный режим..."
+
+  if [ "$(id -u)" -ne 0 ] && ! sudo -n true 2>/dev/null; then
+    [ -c /dev/tty ] && sudo -v </dev/tty 2>/dev/null || true
+  fi
 
   if [ -f "$WORK_DIR/scripts/install.sh" ]; then
     exec bash "$WORK_DIR/scripts/install.sh" "$@"
