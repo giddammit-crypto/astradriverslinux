@@ -73,12 +73,18 @@ auto_update() {
     "${SCRIPT_DIR:+$SCRIPT_DIR/.version.json}" \
     "$(pwd)/.version.json"; do
     [ -n "${vj:-}" ] && [ -f "$vj" ] && \
-      LOCAL_SHA=$(grep -oP '(?<="sha":"?)[a-f0-9]{40}' "$vj" 2>/dev/null | head -1 || echo "") && \
+      LOCAL_SHA=$(sed -nE 's/.*"(sha|commit)":[[:space:]]*"([a-f0-9]{40})".*/\2/p' "$vj" 2>/dev/null | head -1 || echo "") && \
       [ -n "$LOCAL_SHA" ] && break || true
   done
 
-  REMOTE_SHA=$(curl -fsSL --connect-timeout 8 --max-time 15 "$GH_API" 2>/dev/null \
-    | grep -oP '(?<="sha":"?)[a-f0-9]{40}' 2>/dev/null | head -1 || echo "")
+  REMOTE_SHA=""
+  if command -v git >/dev/null 2>&1; then
+    REMOTE_SHA=$(git ls-remote --heads "https://github.com/giddammit-crypto/astradriverslinux.git" main 2>/dev/null | awk '{print $1}' | head -1 || echo "")
+  fi
+  if [ -z "${REMOTE_SHA:-}" ]; then
+    REMOTE_SHA=$(curl -fsSL --connect-timeout 8 --max-time 15 "$GH_API" 2>/dev/null \
+      | sed -nE 's/.*"sha":[[:space:]]*"([a-f0-9]{40})".*/\1/p' | head -1 || echo "")
+  fi
 
   [ -z "${REMOTE_SHA:-}" ] && { warn "Нет связи с GitHub"; return 0; }
   [ -n "${LOCAL_SHA:-}" ] && [ "$LOCAL_SHA" = "$REMOTE_SHA" ] && \

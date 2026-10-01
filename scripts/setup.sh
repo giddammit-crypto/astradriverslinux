@@ -73,12 +73,18 @@ check_and_self_update() {
 
   LOCAL_SHA=""
   for vj in "$SELF_DIR/../.version.json" "$SELF_DIR/.version.json"; do
-    [ -f "$vj" ] && LOCAL_SHA=$(grep -oP '(?<="sha":"?)[a-f0-9]{40}' "$vj" 2>/dev/null | head -1) && \
+    [ -f "$vj" ] && LOCAL_SHA=$(sed -nE 's/.*"(sha|commit)":[[:space:]]*"([a-f0-9]{40})".*/\2/p' "$vj" 2>/dev/null | head -1) && \
       [ -n "$LOCAL_SHA" ] && break || true
   done
 
-  REMOTE_SHA=$(curl -fsSL --connect-timeout 8 --max-time 15 "$GH_API" 2>/dev/null \
-    | grep -oP '(?<="sha":"?)[a-f0-9]{40}' 2>/dev/null | head -1 || echo "")
+  REMOTE_SHA=""
+  if command -v git >/dev/null 2>&1; then
+    REMOTE_SHA=$(git ls-remote --heads "https://github.com/giddammit-crypto/astradriverslinux.git" main 2>/dev/null | awk '{print $1}' | head -1 || echo "")
+  fi
+  if [ -z "${REMOTE_SHA:-}" ]; then
+    REMOTE_SHA=$(curl -fsSL --connect-timeout 8 --max-time 15 "$GH_API" 2>/dev/null \
+      | sed -nE 's/.*"sha":[[:space:]]*"([a-f0-9]{40})".*/\1/p' | head -1 || echo "")
+  fi
 
   [ -z "${REMOTE_SHA:-}" ] && { warn "Нет связи с GitHub"; return 0; }
   [ -n "${LOCAL_SHA:-}" ] && [ "$LOCAL_SHA" = "$REMOTE_SHA" ] && \
@@ -138,11 +144,31 @@ else
   mkdir -p "$WORK_DIR/scripts" "$WORK_DIR/assets"
 
   dl() {
-    local dst="$WORK_DIR/$1"
+    local rel="$1"
+    local dst="$WORK_DIR/$rel"
     mkdir -p "$(dirname "$dst")"
-    curl -fsSL --connect-timeout 10 --max-time 120 "$BASE_URL/$1" -o "$dst" 2>/dev/null || \
-    curl -fsSL --connect-timeout 10 --max-time 120 "$GH_RAW/$1"   -o "$dst" 2>/dev/null || \
-    { warn "Не удалось загрузить $1"; return 1; }
+
+    # Приоритет 1: GitHub Raw (всегда актуальный и корректный plain text)
+    # Приоритет 2: зеркало сайта biblioteka33.ru
+    if ! curl -fsSL --connect-timeout 10 --max-time 120 "$GH_RAW/$rel" -o "$dst" 2>/dev/null; then
+      curl -fsSL --connect-timeout 10 --max-time 120 "$BASE_URL/$rel" -o "$dst" 2>/dev/null || \
+      { warn "Не удалось загрузить $rel"; return 1; }
+    fi
+
+    # Защита от поврежденных/base64 файлов (если сервер отдал base64 вместо текста)
+    if [ -f "$dst" ] && [ -s "$dst" ]; then
+      local first_line
+      first_line=$(head -n 1 "$dst" 2>/dev/null || echo "")
+      if [[ "$first_line" == IyEv* ]] || [[ "$first_line" =~ ^[A-Za-z0-9+/=]{60,}$ ]]; then
+        local tmp_dec
+        tmp_dec=$(mktemp "${dst}.dec.XXXXXX")
+        if base64 -d "$dst" > "$tmp_dec" 2>/dev/null && [ -s "$tmp_dec" ]; then
+          mv -f "$tmp_dec" "$dst"
+        else
+          rm -f "$tmp_dec"
+        fi
+      fi
+    fi
   }
 
   dl "installer_gui.py"         || true
@@ -152,6 +178,7 @@ else
   dl "scripts/epson-l800.sh"    || true
   dl "scripts/epson-l132.sh"    || true
   dl "scripts/nelrf-fix.sh"     || true
+  dl "scripts/onlyoffice.sh"    || true
 fi
 
 chmod +x "$WORK_DIR/installer_gui.py" 2>/dev/null || true
@@ -163,6 +190,19 @@ chmod +x "$WORK_DIR/scripts/"*.sh     2>/dev/null || true
 HAS_DISPLAY=0
 { [ -n "${DISPLAY:-}" ] || [ -n "${WAYLAND_DISPLAY:-}" ]; } && HAS_DISPLAY=1 || true
 CAN_RUN_GUI=0
+# Проверка валидности installer_gui.py (защита от повреждения или base64)
+if [ -f "$WORK_DIR/installer_gui.py" ] && command -v python3 >/dev/null 2>&1; then
+  if ! python3 -m py_compile "$WORK_DIR/installer_gui.py" >/dev/null 2>&1; then
+    if head -n 1 "$WORK_DIR/installer_gui.py" 2>/dev/null | grep -q "^IyEv"; then
+      tmp_py=$(mktemp "${WORK_DIR}/installer_gui-XXXXXX.py")
+      base64 -d "$WORK_DIR/installer_gui.py" > "$tmp_py" 2>/dev/null && mv -f "$tmp_py" "$WORK_DIR/installer_gui.py" || rm -f "$tmp_py"
+    fi
+    if ! python3 -m py_compile "$WORK_DIR/installer_gui.py" >/dev/null 2>&1; then
+      curl -fsSL --connect-timeout 10 --max-time 60 "$GH_RAW/installer_gui.py" -o "$WORK_DIR/installer_gui.py" 2>/dev/null || true
+    fi
+  fi
+fi
+
 if [ "$HAS_DISPLAY" -eq 1 ] && [ -f "$WORK_DIR/installer_gui.py" ] && command -v python3 >/dev/null 2>&1; then
   python3 -c \
     "import gi; gi.require_version('Gtk','3.0'); from gi.repository import Gtk; exit(0 if Gtk.init_check()[0] else 1)" \

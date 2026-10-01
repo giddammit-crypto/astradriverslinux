@@ -1,8 +1,9 @@
 {
-  "version": "2.1.0",
-  "commit": "",
-  "release_name": "Космо 2.1.0 — Драйверы Canon/Epson и система НЭБ РФ для Astra Linux, Ubuntu и Debian",
-  "updated_at": "2026-09-30T21:55:00Z",
+  "version": "2.2.0",
+  "sha": "d9440a4a9f122caa653c3aa577a4ce491c7e2b73",
+  "commit": "d9440a4a9f122caa653c3aa577a4ce491c7e2b73",
+  "release_name": "Космо 2.2.0 — Драйверы Canon/Epson, НЭБ РФ и OnlyOffice для Astra Linux, Ubuntu и Debian",
+  "updated_at": "2026-10-01T04:58:00Z",
   "repo": "giddammit-crypto/astradriverslinux",
   "branch": "main",
   "website": "https://biblioteka33.ru/linux"
